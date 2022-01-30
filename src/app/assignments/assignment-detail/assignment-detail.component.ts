@@ -8,77 +8,84 @@ import { Assignment } from '../assignment.model';
 @Component({
   selector: 'app-assignment-detail',
   templateUrl: './assignment-detail.component.html',
-  styleUrls: ['./assignment-detail.component.css']
+  styleUrls: ['./assignment-detail.component.css'],
 })
 export class AssignmentDetailComponent implements OnInit {
-  assignmentTransmis?:Assignment;
+  assignmentTransmis?: Assignment;
+  assignmentHasNote: boolean = false;
 
-  constructor(private assignmentService:AssignmentsService,
-              private route:ActivatedRoute,
-              private router:Router,
-              private authService:AuthService) { }
+  constructor(
+    private assignmentService: AssignmentsService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    console.log("DANS COMPOSANT DETAIL")
+    console.log('DANS COMPOSANT DETAIL');
     this.getAssignment();
   }
 
   getAssignment() {
     // on récupère l'id dans l'URL
     // le + force la conversion de string à number
-    const id:number = +this.route.snapshot.params['id'];
-    console.log("ID = " + id);
+    const id: number = +this.route.snapshot.params['id'];
+    console.log('ID = ' + id);
 
-    this.assignmentService.getAssignment(id)
-    .subscribe(assignment => {
+    this.assignmentService.getAssignment(id).subscribe((assignment) => {
       // on utilise this.assignmentTransmis puisque c'est la propriété
       // utilisée dans le template HTML
       this.assignmentTransmis = assignment;
-    })
-
+    });
+    console.log('ON ARRIVE AU IF');
+    if (this.assignmentTransmis?.noteFloat == '') {
+      this.assignmentHasNote = true;
+      console.log(this.assignmentHasNote);
+    }
   }
   onAssignmentRendu() {
     this.assignmentTransmis!.rendu = true;
 
-    if(this.assignmentTransmis) {
-      this.assignmentService.updateAssignment(this.assignmentTransmis)
-      .subscribe(reponse => {
-        console.log(reponse.message);
-        // on est dans le subscribe, on est sur que la base de données a été
-        // mise à jour....
-        this.router.navigate(["/home"]);
-      })
+    if (this.assignmentTransmis) {
+      this.assignmentService
+        .updateAssignment(this.assignmentTransmis)
+        .subscribe((reponse) => {
+          console.log(reponse.message);
+          // on est dans le subscribe, on est sur que la base de données a été
+          // mise à jour....
+          this.router.navigate(['/home']);
+        });
       // PAS BON SI ICI car on n'a pas la garantie que les données ont été updatées
       // this.router.navigate(["/home"]);
     }
   }
 
   onDeleteAssignment() {
-    if(this.assignmentTransmis) {
-      this.assignmentService.deleteAssignment(this.assignmentTransmis)
-      .subscribe(reponse => {
-        console.log(reponse.message);
+    if (this.assignmentTransmis) {
+      this.assignmentService
+        .deleteAssignment(this.assignmentTransmis)
+        .subscribe((reponse) => {
+          console.log(reponse.message);
 
-        // pour faire disparaitre la boite qui affiche le détail
-        this.assignmentTransmis = undefined;
+          // pour faire disparaitre la boite qui affiche le détail
+          this.assignmentTransmis = undefined;
 
-        // on affiche liste. Comme on est dans le subscribe, on est sur
-        // que les données sont à jour et que l'assignment a été supprimé !
-        this.router.navigate(["/home"]);
-      })
+          // on affiche liste. Comme on est dans le subscribe, on est sur
+          // que les données sont à jour et que l'assignment a été supprimé !
+          this.router.navigate(['/home']);
+        });
     }
   }
 
   onClickEdit() {
     // correspond à /assignment/1/edit?nom=Buffa&prenom=Michel#edit
-    this.router.navigate(['/assignment', this.assignmentTransmis?.id, 'edit'],
-                        {
-                          queryParams: {
-                            nom:'Buffa',
-                            prenom:'Michel'
-                        },
-                          fragment:'edit'
-                      });
+    this.router.navigate(['/assignment', this.assignmentTransmis?.id, 'edit'], {
+      queryParams: {
+        nom: 'Buffa',
+        prenom: 'Michel',
+      },
+      fragment: 'edit',
+    });
   }
 
   isAdmin() {

@@ -1,29 +1,56 @@
 .rendu {
-  color:green;
+  color: green;
 }
 
 .nonRendu {
-  color:red;
+  color: red;
   background-color: yellow;
-  border : 3px dashed purple;
+  border: 3px dashed purple;
 }
 
 .important {
-   font-size: 40px;
- }
+  font-size: 40px;
+}
 
- .container {
-   display:flex;
-   flex-direction: column;
- }
+.container {
+  display: flex;
+  flex-direction: column;
+}
 
- .ajouterBtn {
-   align-self: flex-end;
- }
+.ajouterBtn {
+  align-self: flex-end;
+}
 
- .pagination {
-   width:500px;
-  display:flex;
+.pagination {
+  width: 500px;
+  display: flex;
   justify-content: space-between;
   align-items: flex-end;
+}
+
+.mat-column-id {
+  width: 32px;
+  border-right: 1px solid currentColor;
+  padding-right: 24px;
+  text-align: center;
+}
+
+.mat-column-nom {
+  padding-left: 16px;
+}
+
+.mat-row:hover .mat-cell {
+  font-weight: bold;
+  background-color: mintcream;
+  cursor: pointer;
+}
+
+.mat-header-row {
+  background-color: mintcream;
+}
+
+.mat-header-cell {
+  font-size: 13px;
+  font-weight: bold;
+  color: black;
 }
