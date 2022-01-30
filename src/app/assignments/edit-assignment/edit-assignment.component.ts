@@ -2,46 +2,59 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AssignmentsService } from 'src/app/shared/assignments.service';
 import { Assignment } from '../assignment.model';
+import { Matiere } from '../matiere';
 
 @Component({
   selector: 'app-edit-assignment',
   templateUrl: './edit-assignment.component.html',
-  styleUrls: ['./edit-assignment.component.css']
+  styleUrls: ['./edit-assignment.component.css'],
 })
 export class EditAssignmentComponent implements OnInit {
-  assignment?:Assignment;
+  assignment?: Assignment;
   // champs du formulaire
-  nomAssignment?:string;
-  dateDeRendu?:Date;
+  nomAssignment?: string;
+  dateDeRendu?: Date;
+  noteFloat?: string;
+  ListMatiere!: Matiere[];
+  imageMatiere?: string;
+  nomMatiere?: string;
+  imageIntervenant?: string;
+  remarque?: string;
 
-  constructor(private route:ActivatedRoute,
-              private router:Router,
-              private assignmentService:AssignmentsService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private assignmentService: AssignmentsService
+  ) {}
 
   ngOnInit(): void {
     // exemple de récupération de "query params" et "fragment"
     // exemple d'URL : /assignment/1/edit?nom=Buffa&prenom=Michel#edit
-    console.log("QUERY PARAMS : ");
+    console.log('QUERY PARAMS : ');
     console.log(this.route.snapshot.queryParams);
-    console.log("FRAGMENT : ");
+    console.log('FRAGMENT : ');
     console.log(this.route.snapshot.fragment);
 
     this.getAssignment();
+    this.ListMatiere = Object.values(Matiere);
+
   }
 
   getAssignment() {
     // récupère l'id dans l'URL
     const id = +this.route.snapshot.params['id'];
 
-    this.assignmentService.getAssignment(id)
-    .subscribe(assignment => {
+    this.assignmentService.getAssignment(id).subscribe((assignment) => {
       // Pour que la "vue" affiche les informations
       // de l'assignment qu'on édite....
       this.assignment = assignment;
       // pré-remplit le formulaire dès l'affichage
       this.nomAssignment = assignment?.nom;
       this.dateDeRendu = assignment?.dateDeRendu;
-    })
+      this.noteFloat = assignment?.noteFloat;
+      this.remarque = assignment?.remarque;
+      this.nomMatiere = assignment?.nomMatiere;
+    });
   }
 
   onSaveAssignment() {
@@ -62,7 +75,5 @@ export class EditAssignmentComponent implements OnInit {
         // navigation vers la home page
         this.router.navigate(['/home']);
       });
-
-
   }
- }
+}

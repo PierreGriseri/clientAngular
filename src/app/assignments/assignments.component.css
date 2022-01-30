@@ -19,6 +19,8 @@
 
 .ajouterBtn {
   align-self: flex-end;
+  margin: auto;
+  padding-bottom: 25px;
 }
 
 .pagination {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AssignmentsService } from 'src/app/shared/assignments.service';
 import { Assignment } from '../assignment.model';
-import { Matiere } from 'src/app/assignments/matiere';
+import { Matiere } from '../matiere';
 
 @Component({
   selector: 'app-add-assignment',

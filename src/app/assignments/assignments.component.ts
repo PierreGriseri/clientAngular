@@ -1,4 +1,3 @@
-import { DataSource } from '@angular/cdk/collections';
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { AssignmentsService } from '../shared/assignments.service';
 import { Assignment } from './assignment.model';
@@ -10,7 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './assignments.component.html',
   styleUrls: ['./assignments.component.css'],
 })
-export class AssignmentsComponent implements OnInit {
+export class AssignmentsComponent implements OnInit, AfterViewInit {
   ajoutActive = false;
   assignments: Assignment[] = [];
   // pour la pagination
@@ -22,6 +21,7 @@ export class AssignmentsComponent implements OnInit {
   prevPage: number = 0;
   hasNextPage: boolean = false;
   nextPage: number = 0;
+
   displayedColumns: string[] = [
     'id',
     'nom',
@@ -35,26 +35,25 @@ export class AssignmentsComponent implements OnInit {
 
   constructor(private assignmentService: AssignmentsService) {}
 
+  @ViewChild('paginator') paginator!: MatPaginator;
+
   ngOnInit(): void {
     this.getAssignments();
+    //this.paginator = new MatPaginator();
+  }
+
+  ngAfterViewInit(): void {
+    this.paginator.pageSize = 10;
   }
 
   getAssignments() {
-    this.assignmentService
-      .getAssignmentsPagine(this.page, this.limit)
-      .subscribe((data) => {
-        // le tableau des assignments est maintenant ici....
-        this.assignments = data.docs;
-        this.page = data.page;
-        this.limit = data.limit;
-        this.totalDocs = data.totalDocs;
-        this.totalPages = data.totalPages;
-        this.hasPrevPage = data.hasPrevPage;
-        this.prevPage = data.prevPage;
-        this.hasNextPage = data.hasNextPage;
-        this.nextPage = data.nextPage;
-        this.dataSource = new MatTableDataSource<Assignment>(this.assignments);
-      });
+    this.assignmentService.getAssignments().subscribe((data) => {
+      // le tableau des assignments est maintenant ici....
+      this.assignments = data;
+      this.dataSource = new MatTableDataSource<Assignment>(this.assignments);
+      this.dataSource.paginator = this.paginator;
+      console.log(this.dataSource);
+    });
   }
 
   getColor(a: any) {

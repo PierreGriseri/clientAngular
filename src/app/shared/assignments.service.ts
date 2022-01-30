@@ -16,8 +16,8 @@ export class AssignmentsService {
     private http: HttpClient
   ) {}
 
-  url = 'http://localhost:8010/api/assignments';
-  //url = "https://api-intense2022.herokuapp.com/api/assignments";
+  //url = 'http://localhost:8010/api/assignments';
+  url = 'https://angular-api-assignment.herokuapp.com/api/assignments';
 
   getAssignments(): Observable<Assignment[]> {
     // return of(this.assignments);
@@ -25,8 +25,8 @@ export class AssignmentsService {
     return this.http.get<Assignment[]>(this.url);
   }
 
-  getAssignmentsPagine(page: number, limit: number): Observable<any> {
-    return this.http.get<any>(`${this.url}?page=${page}&limit=${limit}`);
+  getAssignmentsPagine(page: number, limit: number): Observable<Assignment> {
+    return this.http.get<Assignment>(this.url);
   }
 
   getAssignment(id: number): Observable<Assignment | undefined> {
